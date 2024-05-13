@@ -9,12 +9,12 @@ const router = express.Router();
 router.route("/leave-request").post(requireSignIn,  createLeaveRequest);
 
 // GET ALL REQUEST
-router.route("/get-leave-request").get(requireSignIn, isAdmin, getAllLeaveRequests);
+router.route("/get-leave-request").get(requireSignIn,isAdmin, getAllLeaveRequests);
 
-router.route("/myrequest").get(requireSignIn, getStudentLeaveRequests)
+router.route("/myrequest").get(requireSignIn,  getStudentLeaveRequests)
 
 
 // UPDATE REQUEST
-router.route("/update-leave-request/:id").put(requireSignIn, isAdmin, updateLeaveRequestStatus)
+router.route("/update-leave-request/:id").put(updateLeaveRequestStatus)
 
 module.exports = router;

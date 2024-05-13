@@ -8,53 +8,37 @@ const JWT = require("jsonwebtoken");
 // REGISTRATION KA LOGIC
 // *------------*
 
-
-const register = async(req, res) =>{
+// REGISTRATION KA LOGIC
+const register = async (req, res) => {
     try {
-        const {name, email, phone, password, answer } = req.body;
-    if(!name){
-        res.send({message: "Name is Required"});
-    }
+        const { name, email, phone, password, answer } = req.body;
+        if (!name || !email || !phone || !password || !answer) {
+            return res.status(400).send({ message: "All fields are required" });
+        }
 
-    if(!email){
-        res.send({message: "Email is Required"});
-    }
+        //CHECK FOR EXISTING USER
+        const existingUser = await userModel.findOne({ email });
+        if (existingUser) {
+            return res.status(400).send({
+                success: false,
+                message: "User Already Exists!!!"
+            });
+        }
 
-    if(!phone){
-        res.send({message: "Phone Number is Required"});
-    }
+        //hashing
+        const hashedPassword = await hashPassword(password);
 
-    if(!password){
-        res.send({message: "Password is Required"});
-    }
-
-    if(!answer){
-        res.send({message: "Answer is Required"});
-    }
-    
-  
-    //CHECK FOR EXISTING USER
-    const existingUser = await userModel.findOne({email});
-    if(existingUser){
-        return res.status(200).send({
-            success: false,
-            message: "User Already Exists!!!"
+        // Create user
+        const user = await userModel.create({
+            name, email, phone, answer, password: hashedPassword
         });
-    }
 
-    //hashing
-    const hashedPassword = await hashPassword(password);
-
-    //saving new user
-    const user = await userModel.create({
-        name, email, phone,answer, password:hashedPassword
-    });
-
-    res.status(201).send({
-        success: true, 
-        message: "User Registration Successfull",
-        user
-    });
+        res.status(201).send({
+            success: true,
+            message: "User Registration Successful",
+            user,
+        
+        });
     } catch (error) {
         console.log(error);
         res.status(500).send({
@@ -63,21 +47,16 @@ const register = async(req, res) =>{
             error
         });
     }
-
 };
 
 
-// *------------*
 // LOGIN KA LOGIC
-// *------------*
-
 const login = async(req, res) => {
     try {
-
         //validation
         const { email, password } = req.body;
         if(!email || !password){
-            return res.status(404).send({
+            return res.status(400).send({
                 success: false, 
                 message: "Invalid email or password"
             });
@@ -86,7 +65,7 @@ const login = async(req, res) => {
         //check if user exists or not
         const user = await userModel.findOne({email});
         if(!user){
-            return res.status(404).send({
+            return res.status(400).send({
                 success: false, 
                 message: "Invalid email or password"
             });
@@ -95,21 +74,21 @@ const login = async(req, res) => {
         // match password 
         const match = await comparePassword(password, user.password);
         if(!match){
-            return res.status(404).send({
+            return res.status(400).send({
                 success: false, 
                 message: "Invalid email or password"
             });
         }
 
-        // Generate token if logged in successfull
+        // Generate token if logged in successfully
         const token = await JWT.sign(
             {_id: user._id},
             process.env.JWT_SECRET_KEY,
-            {expiresIn: "3d",});
-            
+            {expiresIn: "3d",}
+        );
 
-            console.log("Login Success");
-            res.status(200).send({
+        console.log("Login Success");
+        res.status(200).send({
             success: true,
             message: "Login Successfull",
             user: {
@@ -118,8 +97,7 @@ const login = async(req, res) => {
                 email: user.email,
                 phone: user.phone,
                 role: user.role,
-                token
-              
+               
             },
             token
         });

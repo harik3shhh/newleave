@@ -1,5 +1,6 @@
 // leaveRequest.controller.js
 const LeaveRequest = require('../models/leave-model');
+const User = require('../models/user-model');
 
 exports.createLeaveRequest = async (req, res) => {
   const { startDate, endDate, reason } = req.body;
@@ -7,7 +8,13 @@ exports.createLeaveRequest = async (req, res) => {
   const userId = req.user._id; // Assuming user is authenticated and user ID is in req.user
 
   try {
-    const newLeaveRequest = new LeaveRequest({ userId, startDate, endDate, reason });
+    const user = await User.findById({_id: userId})
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+
+    const newLeaveRequest = new LeaveRequest({ userId, name: user.name, startDate, endDate, reason });
     await newLeaveRequest.save();
     res.status(201).json(newLeaveRequest);
   } catch (err) {

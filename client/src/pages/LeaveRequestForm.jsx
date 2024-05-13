@@ -33,6 +33,7 @@ const LeaveRequestForm = () => {
   };
 
   return (
+    <>
     <div className="container d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
       <div className="col-md-6">
         <div className="card">
@@ -62,6 +63,7 @@ const LeaveRequestForm = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

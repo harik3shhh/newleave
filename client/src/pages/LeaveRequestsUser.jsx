@@ -2,36 +2,35 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/auth';
 
-
 const LeaveRequestsUser = () => {
   const [requests, setRequests] = useState([]);
   const [auth] = useAuth();
 
-  const getRequests = async () => {
-
+  const getData = async () => {
     try {
-      
-      const config = {
-      headers: {
-        Authorization: `${auth?.user?.token}`,
+      if (!auth.token) {
+        return; // Exit the function if token is not present
       }
-    };
-
-    
+  
+      const config = {
+        headers: {
+          Authorization: `${auth.token}`
+        }
+      };
+  
       console.log(config);
-
-      const { res } = await axios.get(`http://localhost:8000/api/student/myrequest`, config);
-      setRequests(res.data)
-
+  
+      const { data } = await axios.get("http://localhost:8000/api/student/myrequest", config);
+      setRequests(data);
     } catch (error) {
       console.log(error);
     }
   };
+  
 
   useEffect(() => {
-    getRequests();
-  }, []);
-
+    getData();
+  }, [auth?.token]);
 
   return (
     <div className="d-flex justify-content-center align-items-center vh-100">
@@ -44,6 +43,7 @@ const LeaveRequestsUser = () => {
             <table className="table table-striped">
               <thead>
                 <tr>
+                <th>Name</th>
                   <th>Start Date</th>
                   <th>End Date</th>
                   <th>Reason</th>
@@ -53,10 +53,13 @@ const LeaveRequestsUser = () => {
               <tbody>
                 {requests.map(request => (
                   <tr key={request._id}>
+                     <td>{auth.user.name}</td>
                     <td>{new Date(request.startDate).toLocaleDateString()}</td>
                     <td>{new Date(request.endDate).toLocaleDateString()}</td>
                     <td>{request.reason}</td>
-                    <td style={{ color: request.status === 'pending' ? 'red' : 'green' }}>{request.status}</td>
+                    <td style={{ color: request.status === 'pending' || request.status === 'rejected' ? 'red' : 'green' }}>
+                      {request.status}
+                    </td>
                   </tr>
                 ))}
               </tbody>

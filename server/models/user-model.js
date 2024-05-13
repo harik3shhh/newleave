@@ -26,15 +26,6 @@ const userSchema = new mongoose.Schema({
         required: true,
     },
 
-    tokens:[
-        {
-            token:{
-                type:String,
-                required:true
-            }
-        }
-    ],
-
     role:{
         type: Number,
         default: 0,
