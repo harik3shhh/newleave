@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/auth';
 import { toast } from 'react-toastify';
+import { NavLink } from 'react-router-dom';
 
 const Navbar = () => {
     const [auth, setAuth] = useAuth();
@@ -39,9 +40,9 @@ const Navbar = () => {
                 }`}
             >
                 <div className="container-fluid">
-                    <a className="navbar-brand" href="#">
-                        Navbar
-                    </a>
+                    <NavLink className="navbar-brand" to="/">
+                        GET LEAVE
+                    </NavLink>
                     <button
                         className="navbar-toggler"
                         type="button"
@@ -56,42 +57,58 @@ const Navbar = () => {
                     <div className="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
                             <li className="nav-item">
-                                <a className="nav-link active" aria-current="page" href="/">
-                                    Home
-                                </a>
+                                <NavLink
+                                    className="nav-link active"
+                                    aria-current="page"
+                                    to="/"
+                                    style={{ backgroundColor: 'transparent' }}
+                                >
+                                    HOME
+                                </NavLink>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link" href="/leave-request">
-                                    Apply
-                                </a>
+                                {auth.user ? (
+                                    <NavLink
+                                        className="nav-link active"
+                                        to="/leave-request"
+                                        style={{ backgroundColor: 'transparent', marginLeft: '20px', cursor: 'pointer' }}
+                                    >
+                                        APPLY FOR LEAVE
+                                    </NavLink>
+                                ) : null}
                             </li>
-
                             <li className="nav-item">
-                                <a className="nav-link" href="/admin">
-                                    ADMIN
-                                </a>
+                                {auth.user && auth.user.role === 1 ? (
+                                    <NavLink
+                                        className="nav-link"
+                                        to="/admin"
+                                        style={{ backgroundColor: 'transparent', color: 'yellow', marginLeft: '20px', cursor: 'pointer' }}
+                                    >
+                                        ADMIN
+                                    </NavLink>
+                                ) : null}
                             </li>
-
                             <li className="nav-item dropdown">
-                                <a
+                                <NavLink
                                     className="nav-link dropdown-toggle"
-                                    href="#"
+                                    to="#"
                                     role="button"
                                     data-bs-toggle="dropdown"
                                     aria-expanded="false"
+                                    style={{ backgroundColor: 'transparent', marginLeft: '20px' }}
                                 >
-                                    Profile
-                                </a>
+                                    PROFILE
+                                </NavLink>
                                 <ul className="dropdown-menu">
                                     <li>
-                                        <a className="dropdown-item" href="#">
-                                            Edit Profile
-                                        </a>
+                                        <NavLink className="dropdown-item" to="/profile">
+                                             Profile
+                                        </NavLink>
                                     </li>
                                     <li>
-                                        <a className="dropdown-item" href="/myrequest">
+                                        <NavLink className="dropdown-item" to="/myrequest">
                                             Leave Status
-                                        </a>
+                                        </NavLink>
                                     </li>
                                     <li>
                                         <hr className="dropdown-divider" />
@@ -99,29 +116,39 @@ const Navbar = () => {
                                     {!auth.user ? (
                                         <>
                                             <li>
-                                                <a className="dropdown-item" href="/login">
+                                                <NavLink className="dropdown-item" to="/login">
                                                     Login
-                                                </a>
+                                                </NavLink>
                                             </li>
                                             <li>
-                                                <a className="dropdown-item" href="/register">
+                                                <NavLink className="dropdown-item" to="/register">
                                                     Register
-                                                </a>
+                                                </NavLink>
                                             </li>
                                         </>
                                     ) : (
                                         <li>
-                                            <a className="dropdown-item" href="/" onClick={handleLogout}>
+                                            <NavLink
+                                                className="dropdown-item"
+                                                to="/"
+                                                onClick={handleLogout}
+                                            >
                                                 Logout
-                                            </a>
+                                            </NavLink>
                                         </li>
                                     )}
                                 </ul>
                             </li>
+
                             <li className="nav-item">
-                                <a className="nav-link disabled" aria-disabled="true">
-                                    Disabled
-                                </a>
+                                <NavLink
+                                    className="nav-link active"
+                                    aria-current="page"
+                                    to="/"
+                                    style={{ backgroundColor: 'white', borderRadius: '8px', color: '#068EE7' }}
+                                >
+                                    WELCOME {auth.user ? auth.user.name.toUpperCase() : 'GUEST'}
+                                </NavLink>
                             </li>
                         </ul>
                     </div>

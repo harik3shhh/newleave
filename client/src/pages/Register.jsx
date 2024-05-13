@@ -4,7 +4,8 @@ import { toast } from 'react-toastify';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { Form, Button, Container, Row, Col, Card } from 'react-bootstrap';
 
-const Register = ({ sidebar }) => {
+const Register = () => {
+    const unsplashUrl = 'https://source.unsplash.com/1600x900/?vacation/travel'; 
     const navigate = useNavigate();
 
     const [input, setInput] = useState({
@@ -46,12 +47,20 @@ const Register = ({ sidebar }) => {
 
     return (
         <>
-            <Container className="mt-5">
+        <div  style={{
+        
+        backgroundImage: `url(${unsplashUrl})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}>
+            <Container 
+            
+            className="mt-5 vh-100">
                 <Row className="justify-content-md-center">
                     <Col xs={12} md={6}>
                         <Card className="p-4" style={{ boxShadow: '0px 3px 10px rgba(0, 0, 0, 0.1)', marginTop: 'calc(50vh - 200px)' }}>
                             <Form onSubmit={handleSubmit}>
-                                <h2 className="text-center mb-4">Register</h2>
+                                <h2 className="text-center mb-4">REGISTER</h2>
                                 <hr />
 
                                 <Row>
@@ -103,6 +112,7 @@ const Register = ({ sidebar }) => {
                     </Col>
                 </Row>
             </Container>
+            </div>
         </>
     );
 };

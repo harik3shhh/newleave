@@ -1,10 +1,19 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useAuth } from "../context/auth";
+import {useNavigate} from "react-router-dom"
 
 const LeaveRequestsAdmin = () => {
   const [requests, setRequests] = useState([]);
   const [auth] = useAuth();
+  const navigate = useNavigate();
+
+
+  useEffect(() => {
+    if (!auth.token) {
+        navigate("/login");
+    }
+}, [auth.token, navigate]);
 
   useEffect(() => {
     const fetchRequests = async () => {

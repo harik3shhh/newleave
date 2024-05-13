@@ -246,4 +246,4 @@ const deleteUser = async(req, res)=>{
     }
 }
 
-module.exports = {register, login, forgotPasswordController, testController, updateProfileController,getUser, deleteUser};
+module.exports = {register, login, forgotPasswordController, testController, updateProfileController};

@@ -3,13 +3,12 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/auth'; 
-
 import { Card, Form, Button, Row, Col, Container } from 'react-bootstrap';
 
 const Login = () => {
+  const unsplashUrl = 'https://source.unsplash.com/1600x900/?dubai'; 
   const navigate = useNavigate();
   const location = useLocation();
-
   const [auth, setAuth] = useAuth();
   const [input, setInput] = useState({
     email: '',
@@ -19,7 +18,6 @@ const Login = () => {
   const handleInput = (e) => {
     let name = e.target.name;
     let value = e.target.value;
-
     setInput({
       ...input,
       [name]: value,
@@ -36,13 +34,11 @@ const Login = () => {
         setInput({ email: '', password: '' });
         console.log('Login Successful!');
         toast.success('Login Successful');
-
         setAuth({
           ...auth,
           user: data.user,
           token: data.token,
         });
-
         localStorage.setItem('auth', JSON.stringify(data));
         navigate(location.state || '/');
       } else {
@@ -56,11 +52,18 @@ const Login = () => {
   };
 
   return (
-    <Container fluid className="d-flex justify-content-center align-items-center vh-100">
-      <Card style={{ width: '500px' }}>
+    <Container
+    style={{
+        
+      backgroundImage: `url(${unsplashUrl})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+    }}
+    fluid className="d-flex justify-content-center align-items-center vh-100">
+      <Card style={{ width: '500px', boxShadow: '0 4px 8px rgba(0,0,0,0.1)', padding: '20px' }}>
         <Card.Body>
           <Form onSubmit={handleSubmit}>
-            <h2 className="text-center">Login</h2>
+            <h2 className="text-center">LOGIN</h2>
             <hr />
 
             <Form.Group controlId="formBasicEmail">
@@ -88,9 +91,9 @@ const Login = () => {
             </Form.Group>
 
             <Row>
-              <Col>
+              {/* <Col>
                 <NavLink to="/forgot-password" className="forgot">Forgot Password?</NavLink>
-              </Col>
+              </Col> */}
               <Col>
                 <NavLink to="/register" className="create">Create Account</NavLink>
               </Col>

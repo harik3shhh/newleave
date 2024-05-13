@@ -1,5 +1,5 @@
 const express = require("express");
-const {register, login,forgotPasswordController, testController, updateProfileController,  getUser, deleteUser} = require("../controllers/auth-controller");
+const {register, login,forgotPasswordController, testController, updateProfileController} = require("../controllers/auth-controller");
 const {requireSignIn, isAdmin} = require("../middlewares/auth-middleware");
 
 
@@ -32,9 +32,6 @@ router.get("/admin-auth", requireSignIn,isAdmin, (req, res)=>{
 // UPDATE PROFILE
 router.put("/profile", requireSignIn, updateProfileController)
 
-// GET ALL USER
-router.get("/alluser", requireSignIn, getUser);
 
-router.delete("/delete-user/:id", requireSignIn, isAdmin, deleteUser);
 
 module.exports = router;

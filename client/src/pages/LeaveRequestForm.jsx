@@ -1,17 +1,30 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import {toast} from "react-toastify"
 import { useAuth } from '../context/auth';
+import {useNavigate} from "react-router-dom"
 
 const LeaveRequestForm = () => {
+  const navigate = useNavigate()
   const [auth] = useAuth();
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [reason, setReason] = useState('');
 
+  useEffect(() => {
+    if (!auth.token) {
+        navigate("/login");
+    }
+}, [auth.token, navigate]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+
+      if (!auth.token) {
+        return navigate("/login");// Exit the function if token is not present
+      }
+
       const config={
         headers: {
           Authorization: `${auth.token}`
@@ -35,6 +48,7 @@ const LeaveRequestForm = () => {
   return (
     <>
     <div className="container d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
+      {!auth.token && <h1>PLEASE LOGIN BEFORE SUBMITTING THE LEAVE REQUEST</h1>}
       <div className="col-md-6">
         <div className="card">
           <div className="card-header">
