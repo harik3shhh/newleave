@@ -20,22 +20,27 @@ const LeaveRequestsAdmin = () => {
       if (!auth.token) {
         return; // Exit the function if token is not present
       }
-
+    
       const config = {
         headers: {
           Authorization: `${auth.token}`
         }
       };
-
+    
       try {
         const { data } = await axios.get(
           "http://localhost:8000/api/student/get-leave-request?status=pending", config
         );
-        setRequests(data);
+    
+        // Sort the requests by createdAt in descending order
+        const sortedRequests = data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    
+        setRequests(sortedRequests);
       } catch (err) {
         console.error(err);
       }
     };
+    
 
     fetchRequests();
   }, [auth.token]);
